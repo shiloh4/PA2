@@ -1,0 +1,53 @@
+{
+  "image": "mcr.microsoft.com/vscode/devcontainers/cpp:bullseye",
+  "containerUser": "vscode",
+  "workspaceFolder": "/workspaces/pa2",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/pa2,type=bind",
+
+  // Install some basic extensions for developing inside the devcontainer
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "esbenp.prettier-vscode",
+        "ms-vscode.makefile-tools"
+      ],
+      "settings": {
+        "C_Cpp.default.compilerPath": "/usr/bin/g++",
+        "C_Cpp.intelliSenseEngine": "default",
+        "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: LLVM, IndentWidth: 4, ColumnLimit: 80 }",
+        "editor.rulers": [80, 120],
+        "makefile.launchConfigurations": [
+          {
+            "cwd": "/workspaces/pa2",
+            "binaryPath": "/workspaces/pa2/tests/appclient",
+            "binaryArgs": ["127.0.0.1", "9000", "Vegas"]
+          },
+          {
+            "cwd": "/workspaces/pa2",
+            "binaryPath": "/workspaces/pa2/tests/appserver",
+            "binaryArgs": ["9000", "Vegas"]
+          }
+        ]
+      }
+    }
+  },
+  "remoteEnv": {
+    // To run the assignment tests, the compiled programs needs to know
+    // where to find the compiled libudt.so. In the devcontainer, we export
+    // the LD_LIBRARY_PATH variable for you but when testing outside the
+    // devcontainer you should set this variable to the udt4 directory
+    // yourself.
+    "LD_LIBRARY_PATH": "/workspaces/pa2/udt4"
+  },
+
+  "runArgs": [
+    // Add the required capabilities for debugging & tc
+    "--cap-add=SYS_PTRACE",
+    "--cap-add=NET_ADMIN",
+
+    // If you are running the devcontainer using podman instead of docker,
+    // uncomment the following lines.
+    // "--userns=keep-id"
+  ]
+}
