@@ -135,6 +135,9 @@ class Vegas : public CCC {
     // Add additional variables for your implementation below.
 
     // TODO: Declare additional variables required for your Vegas implementation
+    double m_dAlpha = 1.0 * (1024.0);
+    double m_dBeta = 50.0 * (1024.0);
+    double m_dLinearIncreaseFactor = 5.0 / (1024.0);
 
     // Complete your implementation above this line
     // *************************************************************************
