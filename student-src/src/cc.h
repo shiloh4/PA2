@@ -55,6 +55,9 @@ class Vegas : public CCC {
         // this function to tune the alpha, beta, and linear increase factors.
 
         // TODO: Initialize the additional variables that you declared
+        m_dAlpha = 1.0 * 1024.0;
+        m_dBeta = 50.0 * 1024.0;
+        m_dLinearIncreaseFactor = 5.0 / 1024.0;
 
         // Complete your implementation above this line
         // *********************************************************************
@@ -110,6 +113,28 @@ class Vegas : public CCC {
         //    size by modifying the `m_dCWndSize` variable.
 
         // TODO: Implement Vegas::onACK()
+        if (m_dBaseRTT > 0.0 && m_dCurrentRTT > 0.0) {
+            const double cwnd_bytes = m_dCWndSize * static_cast<double>(m_iMSS); // 1
+            const double expected_throughput = (cwnd_bytes * 1000.0) / m_dBaseRTT; // 2
+
+            long long unacked_pkts = static_cast<long long>(m_iSndCurrSeqNo) - static_cast<long long>(ack);
+            if (unacked_pkts < 0) {
+                unacked_pkts = 0;
+            }
+            const double bytes_in_flight = static_cast<double>(unacked_pkts) * static_cast<double>(m_iMSS);
+            const double actual_throughput = (bytes_in_flight * 1000.0) / m_dCurrentRTT; // 3
+
+            double diff = expected_throughput - actual_throughput; //4
+            if (diff < 0.0) {
+                diff = 0.0;
+            }
+
+            if (diff < m_dAlpha) { // 5
+                m_dCWndSize += diff * m_dLinearIncreaseFactor;
+            } else if (diff > m_dBeta) {
+                m_dCWndSize -= diff * m_dLinearIncreaseFactor;
+            }
+        }
 
         // Complete your implementation above this line
         // *********************************************************************
@@ -135,9 +160,9 @@ class Vegas : public CCC {
     // Add additional variables for your implementation below.
 
     // TODO: Declare additional variables required for your Vegas implementation
-    double m_dAlpha = 1.0 * (1024.0);
-    double m_dBeta = 50.0 * (1024.0);
-    double m_dLinearIncreaseFactor = 5.0 / (1024.0);
+    double m_dAlpha;
+    double m_dBeta;
+    double m_dLinearIncreaseFactor;
 
     // Complete your implementation above this line
     // *************************************************************************
