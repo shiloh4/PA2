@@ -55,9 +55,9 @@ class Vegas : public CCC {
         // this function to tune the alpha, beta, and linear increase factors.
 
         // TODO: Initialize the additional variables that you declared
-        m_dAlpha = 1.0 * 1024.0;
-        m_dBeta = 50.0 * 1024.0;
-        m_dLinearIncreaseFactor = 5.0 / 1024.0;
+        m_dAlpha = 10.0 * 1024.0;
+        m_dBeta = 70.0 * 1024.0;
+        m_dLinearIncreaseFactor = 0.1 / 1024.0;
 
         // Complete your implementation above this line
         // *********************************************************************
